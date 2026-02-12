@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question...</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --pink: #ff4d6d;
+            --soft-pink: #ffeef2;
+            --yellow: #ffda79;
+            --dark-text: #5d4037;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fff9e6 0%, var(--soft-pink) 100%);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            color: var(--dark-text);
+        }
+
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        h1 { color: #d63384; font-size: 2.2rem; margin-bottom: 20px; }
+        
+        .buttons { display: flex; justify-content: center; align-items: center; gap: 20px; min-height: 150px; }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #yesBtn, .action-btn { background-color: var(--pink); color: white; }
+        #noBtn { background-color: var(--yellow); position: relative; white-space: nowrap; }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(214, 51, 132, 0.15);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .res-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .description-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-style: italic;
+            color: #7a5c52;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        select {
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid var(--pink);
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 25px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <div id="step1">
+            <h1>Will you be my Valentine? ❤️</h1>
+            <div class="buttons">
+                <button id="yesBtn" onclick="showSuccess()">Yes</button>
+                <button id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div id="step2" class="hidden">
+            <h1>Ab aayi na line pe! 🥰</h1>
+            <p style="font-size: 1.2rem;">I love you bbgurl. Since you said yes...</p>
+            <button class="action-btn" onclick="startPlanning()">Let's plan our day 🌹</button>
+        </div>
+
+        <div id="step3" class="hidden">
+            <div class="card" id="resCard">
+                <img src="" alt="Restaurant" class="res-img" id="resImg">
+                <h2 id="resName" style="color: var(--pink);">Restaurant Name</h2>
+                <p id="resDesc" class="description-text">Description goes here...</p>
+                <button class="action-btn" id="nextBtn" onclick="nextRestaurant()">Next Recommendation →</button>
+            </div>
+        </div>
+
+        <div id="step4" class="hidden">
+            <div class="card">
+                <h1>Where do you want to go? 🍽️</h1>
+                <p>Pick the perfect Gurgaon spot for us:</p>
+                <select id="finalChoice"></select>
+                <button class="action-btn" onclick="finishSelection()">Confirm Date Spot! ❤️</button>
+            </div>
+        </div>
+        
+        <div id="step5" class="hidden">
+            <div class="card">
+                <h1 style="font-size: 3rem;">🥂</h1>
+                <h1>It's a date!</h1>
+                <p id="finalMsg" style="font-size: 1.2rem; font-weight: bold; color: var(--pink);"></p>
+                <p>See you on the 14th, gorgeous! 🥰🌹</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messages = [
+            "No", "Are you sure?", "Babygurl please...", "Y u do dis? :(", 
+            "I'm gonna cry...", "You're breaking my heart ;(", "I'll buy you food!", 
+            "Just click Yes already!", "ab zyaada ho raha hai", "maan ja chup chaap!", 
+            "Give up, it's destiny.", "I'm telling your mom.", "I'm telling my mom."
+        ];
+
+        const restaurants = [
+            {
+                name: "SOBOMBAE",
+                img: "sobomb.jpg",
+                desc: "Where Bombay's soul meets Gurgaon's hustle. Chef Ajay Chopra brings the flavor, but you bring the charm—it's basically a masterclass in good vibes!"
+            },
+            {
+                name: "ENJI Cafe",
+                img: "Enjis.jpg",
+                desc: "A cozy aesthetic dream that's practically made for Instagram. Perfect for deep talks, great coffee, and looking cute while doing both!"
+            },
+            {
+                name: "Popes",
+                img: "popes.jpg",
+                desc: "Classy, timeless, and just a little bit fancy—kind of like our relationship. The food is incredible, but I'll probably be too busy looking at you."
+            },
+            {
+                name: "Nara Thai",
+                img: "narathai.jpg",
+                desc: "Bringing the vibrant streets of Bangkok to G-Town. Bold, spicy, and colorful—just like your personality (when you haven't had your morning coffee)!"
+            },
+            {
+                name: "Kokoy",
+                img: "kooky.jpg",
+                desc: "Pan-Asian perfection with a side of sophisticated mystery. It's the ultimate 'cool' spot for a Valentine's date that feels extra special."
+            }
+        ];
+
+        let currentRes = 0;
+        let noCount = 0;
+        let scale = 1;
+        
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+
+        function moveNoButton() {
+            noBtn.style.position = 'absolute';
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            scale += 0.15;
+            yesBtn.style.transform = `scale(${scale})`;
+            if (noCount < messages.length - 1) noCount++;
+            noBtn.textContent = messages[noCount];
+        }
+
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); });
+
+        function showSuccess() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            noBtn.classList.add('hidden');
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ffda79'] });
+        }
+
+        function startPlanning() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            updateRestaurant();
+        }
+
+        function updateRestaurant() {
+            const res = restaurants[currentRes];
+            document.getElementById('resName').innerText = res.name;
+            document.getElementById('resImg').src = res.img;
+            document.getElementById('resDesc').innerText = res.desc;
+            
+            if (currentRes === restaurants.length - 1) {
+                document.getElementById('nextBtn').innerText = "Pick your favorite spot! →";
+            }
+        }
+
+        function nextRestaurant() {
+            if (currentRes < restaurants.length - 1) {
+                currentRes++;
+                updateRestaurant();
+            } else {
+                showFinalChoice();
+            }
+        }
+
+        function showFinalChoice() {
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.remove('hidden');
+            const select = document.getElementById('finalChoice');
+            restaurants.forEach(res => {
+                let opt = document.createElement('option');
+                opt.value = res.name;
+                opt.innerHTML = res.name;
+                select.appendChild(opt);
+            });
+        }
+
+        function finishSelection() {
+            const choice = document.getElementById('finalChoice').value;
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('step5').classList.remove('hidden');
+            document.getElementById('finalMsg').innerText = `Destination: ${choice}`;
+        }
+    </script>
+</body>
+</html>
