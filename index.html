@@ -95,11 +95,14 @@
 </head>
 <body>
 
+    <audio id="celebrationSong" src="Yes.mp3" loop></audio>
+    <audio id="finalSong" src="Final.mp3" loop></audio>
+
     <div class="container" id="mainContainer">
         <div id="step1">
-            <h1>Aashna Saigal, will you do me the honour of being my Valentine? ❤️</h1>
+            <h1>Aashna, will you be my Valentine, por favor? ❤️</h1>
             <div class="buttons">
-                <button id="yesBtn" onclick="showSuccess()">Yes</button>
+                <button id="yesBtn" onclick="celebrate()">Yes</button>
                 <button id="noBtn">No</button>
             </div>
         </div>
@@ -114,7 +117,7 @@
             <div class="card" id="resCard">
                 <img src="" alt="Restaurant" class="res-img" id="resImg">
                 <h2 id="resName" style="color: var(--pink);">Restaurant Name</h2>
-                <p id="resDesc" class="description-text">Description goes here...</p>
+                <p id="resDesc" class="description-text"></p>
                 <button class="action-btn" id="nextBtn" onclick="nextRestaurant()">Next Recommendation →</button>
             </div>
         </div>
@@ -122,7 +125,7 @@
         <div id="step4" class="hidden">
             <div class="card">
                 <h1>Where do you want to go? 🍽️</h1>
-                <p>Pick the perfect Gurgaon spot for us:</p>
+                <p>Pick the perfect date spot for us:</p>
                 <select id="finalChoice"></select>
                 <button class="action-btn" onclick="finishSelection()">Confirm Date Spot! ❤️</button>
             </div>
@@ -133,7 +136,7 @@
                 <h1 style="font-size: 3rem;">🥂</h1>
                 <h1>It's a date!</h1>
                 <p id="finalMsg" style="font-size: 1.2rem; font-weight: bold; color: var(--pink);"></p>
-                <p>See you on the 14th, bbgurl! 🥰🌹</p>
+                <p>See you on the 14th, gorgeous! 🥰🌹</p>
             </div>
         </div>
     </div>
@@ -149,12 +152,12 @@
         const restaurants = [
             {
                 name: "SOBOMBAE",
-                img: "sobomb.jpg",
+                img: "sobombae.jpg", 
                 desc: "Where Bombay's soul meets Gurgaon's hustle. Chef Ajay Chopra brings the flavor, but you bring the charm—it's basically a masterclass in good vibes!"
             },
             {
                 name: "ENJI Cafe",
-                img: "Enjis.jpg",
+                img: "enji.jpg",
                 desc: "A cozy aesthetic dream that's practically made for Instagram. Perfect for deep talks, great coffee, and looking cute while doing both!"
             },
             {
@@ -164,8 +167,8 @@
             },
             {
                 name: "Nara Thai",
-                img: "narathai.jpg",
-                desc: "Bringing the vibrant streets of Bangkok to G-Town. Bold, spicy, and colorful—just like your personality (when you haven't had your morning coffee)!"
+                img: "nara.jpg",
+                desc: "Bringing the vibrant streets of Bangkok to G-Town. Bold, spicy, and colorful—just like your personality!"
             },
             {
                 name: "Kokoy",
@@ -196,7 +199,11 @@
         noBtn.addEventListener('mouseenter', moveNoButton);
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); });
 
-        function showSuccess() {
+        function celebrate() {
+            // Start Yes.mp3
+            const celebrationAudio = document.getElementById('celebrationSong');
+            celebrationAudio.play().catch(e => console.log("Audio blocked"));
+
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
             noBtn.classList.add('hidden');
@@ -242,6 +249,14 @@
         }
 
         function finishSelection() {
+            // Stop Yes.mp3
+            const celebrationAudio = document.getElementById('celebrationSong');
+            celebrationAudio.pause();
+
+            // Start Final.mp3
+            const finalAudio = document.getElementById('finalSong');
+            finalAudio.play().catch(e => console.log("Audio blocked"));
+
             const choice = document.getElementById('finalChoice').value;
             document.getElementById('step4').classList.add('hidden');
             document.getElementById('step5').classList.remove('hidden');
@@ -249,6 +264,4 @@
         }
     </script>
 </body>
-
 </html>
-
